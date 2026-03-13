@@ -26,7 +26,19 @@ func ConnectDB() *gorm.DB {
 		log.Fatal("Koneksi database gagal", err)
 	}
 
-	err = db.AutoMigrate(&entity.User{})
+	err = db.AutoMigrate(
+		&entity.User{},
+		&entity.Career{},
+		&entity.Skill{},
+		&entity.UserCareerSession{},
+		&entity.SelfAssessmentSkill{},
+		&entity.Question{},
+		&entity.QuizSession{},
+		&entity.QuizAnswer{},
+		&entity.Material{},
+		&entity.LearningPathProgress{},
+	)
+
 	if err != nil {
 		log.Fatal("Gagal membuat migrasi database")
 	}

@@ -35,13 +35,15 @@ func (au *AuthUsecase) Register(ctx context.Context, req dto.RegisterRequest) (*
 		return nil, errors.New("Gagal Membuat Password")
 	}
 
+	userRole := entity.RoleUser
+
 	user := &entity.User{
 		ID:       uuid.New(),
 		FullName: req.Fullname,
 		Username: req.Username,
 		Email:    req.Email,
 		Password: hashedPassword,
-		Role:     "user",
+		Role:     userRole,
 	}
 
 	err = au.authRepo.Save(ctx, user)
@@ -49,7 +51,7 @@ func (au *AuthUsecase) Register(ctx context.Context, req dto.RegisterRequest) (*
 		return nil, errors.New("Gagal menyimpan user")
 	}
 
-	token, err := jwt.GenerateToken(user.ID.String(), user.Role)
+	token, err := jwt.GenerateToken(user.ID.String(), string(userRole))
 	if err != nil {
 		return nil, errors.New("Gagal membuat token")
 	}
@@ -61,7 +63,7 @@ func (au *AuthUsecase) Register(ctx context.Context, req dto.RegisterRequest) (*
 			Fullname: user.FullName,
 			Username: user.Username,
 			Email:    user.Email,
-			Role:     user.Role,
+			Role:     string(user.Role),
 		},
 	}, nil
 }
@@ -73,10 +75,10 @@ func (au *AuthUsecase) Login(ctx context.Context, log dto.LoginRequest) (*dto.Au
 	}
 
 	if !bcrypt.CheckPassword(user.Password, log.Password) {
-		return nil, errors.New("Email atau pasword salah")
+		return nil, errors.New("Email atau password salah")
 	}
 
-	token, err := jwt.GenerateToken(user.ID.String(), user.Role)
+	token, err := jwt.GenerateToken(user.ID.String(), string(user.Role))
 	if err != nil {
 		return nil, errors.New("Gagal generate token")
 	}
@@ -88,7 +90,7 @@ func (au *AuthUsecase) Login(ctx context.Context, log dto.LoginRequest) (*dto.Au
 			Fullname: user.FullName,
 			Username: user.Username,
 			Email:    user.Email,
-			Role:     user.Role,
+			Role:     string(user.Role),
 		},
 	}, nil
 }

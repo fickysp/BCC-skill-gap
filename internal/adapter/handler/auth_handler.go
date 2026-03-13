@@ -65,7 +65,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "Login berhasil",
 		"data":    result,

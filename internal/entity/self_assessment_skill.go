@@ -1,0 +1,21 @@
+package entity
+
+import (
+	"github.com/google/uuid"
+)
+
+type SelfAssessmentSkill struct {
+	ID                  uuid.UUID `gorm:"primaryKey;type:uuid"`
+	UserCareerSessionID uuid.UUID `gorm:"type:uuid;not null"`
+	UserCareerSession   UserCareerSession
+	SkillID             uuid.UUID `gorm:"type:uuid;not null"`
+	Skill               Skill
+	UserLevel           LevelEnum `gorm:"type:varchar(50)"`
+}
+
+func (s *SelfAssessmentSkill) BeforeCreate() error {
+	if s.ID == uuid.Nil {
+		s.ID = uuid.New()
+	}
+	return nil
+}

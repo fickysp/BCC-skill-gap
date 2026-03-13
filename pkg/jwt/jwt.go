@@ -37,11 +37,10 @@ func GenerateToken(userId, role string) (string, error) {
 }
 
 func ValidateToken(tokens string) (*Claims, error) {
-	secret := os.Getenv("JWt_SECRET")
+	secret := os.Getenv("JWT_SECRET")
 
 	token, err := jwt.ParseWithClaims(tokens, &Claims{}, func(t *jwt.Token) (interface{}, error) {
-		err := t.Method.(*jwt.SigningMethodHMAC)
-		if err != nil {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("signing method tidak valid")
 		}
 		return []byte(secret), nil
