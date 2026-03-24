@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"net/http"
+	"os"
 	"project-bcc/pkg/jwt"
 	"strings"
 
@@ -31,7 +32,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		tokenString := parts[1]
-		claims, err := jwt.ValidateToken(tokenString)
+		claims, err := jwt.ValidateToken(tokenString, os.Getenv("JWT_SECRET"))
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"success": false,

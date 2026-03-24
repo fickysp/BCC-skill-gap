@@ -40,6 +40,12 @@ func (r *Router) SetupRouter() *gin.Engine {
 	{
 		auth.POST("/register", r.authHandler.Register)
 		auth.POST("/login", r.authHandler.Login)
+		auth.POST("/verify", r.authHandler.VerifyEmail)
+		auth.POST("/resend-verify", r.authHandler.ResendVerification)
+		auth.POST("/refresh", r.authHandler.Refresh)
+		auth.POST("/logout", r.authHandler.Logout)
+		auth.POST("/forgot-password", r.authHandler.ForgotPassword)
+		auth.POST("/reset-password", r.authHandler.ResetPassword)
 	}
 
 	career := router.Group("/api/careers")

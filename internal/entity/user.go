@@ -10,7 +10,6 @@ import (
 type User struct {
 	ID             uuid.UUID `gorm:"primaryKey;type:uuid"`
 	FullName       string    `gorm:"type:varchar(255);not null"`
-	Username       string    `gorm:"type:varchar(255);not null;unique"`
 	Email          string    `gorm:"type:varchar(255);unique;not null"`
 	Password       string    `gorm:"type:varchar(500);not null"`
 	Role           Role      `gorm:"type:varchar(50);not null;default:'user'"`
@@ -19,6 +18,7 @@ type User struct {
 	Institution    string    `gorm:"type:varchar(255)"`
 	GraduationYear int
 	IsPremium      bool      `gorm:"default:false"`
+	IsVerified     bool      `gorm:"default:false"`
 	RefreshToken   string    `gorm:"type:varchar(500)"`
 	CreatedAt      time.Time `gorm:"autoCreateTime"`
 	UpdatedAt      time.Time `gorm:"autoUpdateTime"`

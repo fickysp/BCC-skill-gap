@@ -11,10 +11,11 @@ import (
 type Claims struct {
 	UserID string `json:"user_id"`
 	Role   string `json:"role"`
+	Type   string `json:"type"`
 	jwt.RegisteredClaims
 }
 
-func GenerateToken(userId, role string) (string, error) {
+func GenerateAccessToken(userId, role string) (string, error) {
 	secret := os.Getenv("JWT_SECRET")
 	expired := os.Getenv("JWT_EXPIRED")
 
@@ -26,6 +27,7 @@ func GenerateToken(userId, role string) (string, error) {
 	claims := &Claims{
 		UserID: userId,
 		Role:   role,
+		Type:   "access",
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(duration)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
@@ -36,9 +38,59 @@ func GenerateToken(userId, role string) (string, error) {
 	return token.SignedString([]byte(secret))
 }
 
-func ValidateToken(tokens string) (*Claims, error) {
-	secret := os.Getenv("JWT_SECRET")
+func GenerateRefreshToken(userID, role string, rememberMe bool) (string, error) {
+	secret := os.Getenv("REFRESH_TOKEN_SECRET")
 
+	duration := 24 * time.Hour
+	if rememberMe {
+		duration = 7 * 24 * time.Hour
+	}
+
+	claims := &Claims{
+		UserID: userID,
+		Role:   role,
+		Type:   "refresh",
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(duration)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString([]byte(secret))
+}
+
+func GenerateEmailVerificationToken(userID string) (string, error) {
+	secret := os.Getenv("EMAIL_VERIFY_SECRET")
+
+	claims := &Claims{
+		UserID: userID,
+		Type:   "email_verification",
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(15 * time.Minute)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString([]byte(secret))
+}
+
+func GenerateResetPasswordToken(userID string) (string, error) {
+	secret := os.Getenv("RESET_PASSWORD_SECRET")
+
+	claims := &Claims{
+		UserID: userID,
+		Type:   "reset_password",
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(15 * time.Minute)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString([]byte(secret))
+}
+
+func ValidateToken(tokens, secret string) (*Claims, error) {
 	token, err := jwt.ParseWithClaims(tokens, &Claims{}, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("signing method tidak valid")
