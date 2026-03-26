@@ -28,7 +28,7 @@ func (s *SkillHandler) GetAllSkill(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"message": "Daftar Skill",
+		"message": "Berhasil mengambil daftar Skill",
 		"data":    result,
 	})
 }
@@ -45,7 +45,7 @@ func (s *SkillHandler) GetSkillById(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"message": "Detail Skill",
+		"message": "Berhasil mengambil detail Skill",
 		"data":    result,
 	})
 }

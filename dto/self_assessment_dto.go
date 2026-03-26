@@ -11,5 +11,5 @@ type SkillLevelRequest struct {
 }
 
 type SelfAssessmentResponse struct {
-	UserCareerSessionID string `json:"user_career_session_id"`
+	UserCareerSessionID string `json:"career_session_id"`
 }

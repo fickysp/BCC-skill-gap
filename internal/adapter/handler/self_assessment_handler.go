@@ -32,7 +32,7 @@ func (s *SelfAssessmentHandler) SubmitAssessment(c *gin.Context) {
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"success": false,
-			"message": "User tidak ditemukan",
+			"message": "User tidak ditemukan atau sesi telah habis",
 		})
 		return
 	}

@@ -28,7 +28,7 @@ func (ch *CareerHandler) GetAllCareer(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"message": "Daftar Karir",
+		"message": "Berhasil mengambil daftar karir",
 		"data":    result,
 	})
 }
@@ -45,7 +45,7 @@ func (ch *CareerHandler) GetCareerById(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"message": "Detail Karir",
+		"message": "Berhasil mengambil detail Karir",
 		"data":    result,
 	})
 }

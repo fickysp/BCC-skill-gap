@@ -2,20 +2,21 @@ package handler
 
 import (
 	"net/http"
+	"project-bcc/dto"
 	"project-bcc/internal/usecase"
 
 	"github.com/gin-gonic/gin"
 )
 
-type QuizHandler struct {
-	quizUsecase usecase.QuizUsecase
+type CareerSessionHandler struct {
+	careerSessionUsecase *usecase.CareerSessionUsecase
 }
 
-func NewQuizHandler(qu usecase.QuizUsecase) *QuizHandler {
-	return &QuizHandler{quizUsecase: qu}
+func NewCareerSessionHandler(cs *usecase.CareerSessionUsecase) *CareerSessionHandler {
+	return &CareerSessionHandler{careerSessionUsecase: cs}
 }
 
-func (h *QuizHandler) StartQuiz(c *gin.Context) {
+func (h *CareerSessionHandler) Create(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{
@@ -25,16 +26,16 @@ func (h *QuizHandler) StartQuiz(c *gin.Context) {
 		return
 	}
 
-	careerSessionID := c.Param("careerSessionId")
-	if careerSessionID == "" {
+	var req dto.CareerSessionCreateRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
-			"message": "career session ID tidak valid",
+			"message": err.Error(),
 		})
 		return
 	}
 
-	res, err := h.quizUsecase.StartQuiz(c.Request.Context(), userID.(string), careerSessionID)
+	res, err := h.careerSessionUsecase.CreateCareerSession(c.Request.Context(), userID.(string), req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"success": false,
@@ -45,7 +46,7 @@ func (h *QuizHandler) StartQuiz(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{
 		"success": true,
-		"message": "Kuis berhasil dimulai",
+		"message": "Sesi karir berhasil dimulai",
 		"data":    res,
 	})
 }
