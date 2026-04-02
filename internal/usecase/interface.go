@@ -60,7 +60,7 @@ type QuizRepository interface {
 	UpdateQuizAnswer(ctx context.Context, quizSessionID string, quizAnswerID string, userAnswer string) error
 	GetAnswerWithQuestions(ctx context.Context, quizSessionID string) ([]entity.QuizAnswer, error)
 	SubmitQuizTransaction(ctx context.Context, quizSessionID string, careerSessionID string, totalScore int, updatedSkill []entity.SelfAssessmentSkill, updatedAnswers []entity.QuizAnswer) error
-	GetQuizSessionStatus(ctx context.Context, careerSessionID string) (*entity.QuizSession, error)
+	GetQuizSessionStatus(ctx context.Context, quizSessionID string) (*entity.QuizSession, error)
 	Delete(ctx context.Context, quizSessionID string) error
 }
 
