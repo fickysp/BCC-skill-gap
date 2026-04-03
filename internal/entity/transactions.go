@@ -7,8 +7,9 @@ import (
 )
 
 type Transaction struct {
-	ID        string            `gorm:"column:id;primaryKey"`
-	UserID    uuid.UUID         `gorm:"column:user_id"`
+	ID        string    `gorm:"column:id;primaryKey"`
+	UserID    uuid.UUID `gorm:"column:user_id"`
+	User      User
 	Amount    int64             `gorm:"column:amount"`
 	Status    TransactionStatus `gorm:"column:status"`
 	SnapToken string            `gorm:"column:snap_token"`
