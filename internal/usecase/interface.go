@@ -71,3 +71,10 @@ type QuestionRepository interface {
 	Update(ctx context.Context, question *entity.Question) error
 	Delete(ctx context.Context, id string) error
 }
+
+type PaymentRepository interface {
+	CreateTransaction(ctx context.Context, tx *entity.Transaction) error
+	GetTransactionByID(ctx context.Context, orderID string) (*entity.Transaction, error)
+	UpdateTransactionStatus(ctx context.Context, orderID string, status entity.TransactionStatus) error
+	UpgradeUserAccount(ctx context.Context, userID string) error
+}
